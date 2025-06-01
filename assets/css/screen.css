@@ -20,7 +20,7 @@ production stylesheet in assets/built/screen.css
 10.  Site Footer
 11. Dark Mode
 12. Lightbox
-
+13. tocbot
 */
 
 /* 1. Global - Set up the things
@@ -3180,6 +3180,157 @@ html.dark-mode .footer-cta-title {
 .pswp--minimal--dark .pswp__top-bar {
     background: none;
 }
+
+/* 13. tocbot
+/* ---------------------------------------------------------- */
+.viewport,
+.site-main,
+.gh-content,
+.gh-canvas {
+    position: relative;
+    overflow: visible !important;
+    z-index: auto;
+}
+
+.gh-content {
+    position: relative;
+}
+
+/* 卡片標題區 */
+.gh-content .kg-header-card {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.gh-sidebar {
+    position: fixed;
+    top: 30vh;
+    left: 1.2rem;
+    width: 250px;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: color-mix(in srgb, var(--ghost-accent-color) 10%, white);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--ghost-accent-color) 30%, transparent);
+    border: 2px dashed var(--ghost-accent-color);
+    border-radius: 1rem;
+    z-index: 100;
+    pointer-events: auto;
+    font-family: "Quicksand", "Noto Sans TC", sans-serif;
+    padding: 0.5rem;
+    animation: floatIn 0.6s ease-in-out;
+}
+
+@keyframes floatIn {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* TOC 主體 */
+.gh-toc {
+    pointer-events: auto;
+    position: relative;
+    z-index: 9999;
+    font-family: inherit;
+}
+
+.gh-toc > .toc-list {
+    position: relative;
+}
+
+.toc-list {
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* TOC Link 樣式 */
+.gh-toc .toc-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    margin: 4px 0;
+    border-radius: 0.6rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    color: color-mix(in srgb, var(--ghost-accent-color) 90%, black);
+    background: linear-gradient(90deg, white, color-mix(in srgb, var(--ghost-accent-color) 10%, white));
+    box-shadow: 0 0 4px color-mix(in srgb, var(--ghost-accent-color) 30%, transparent);
+}
+
+.gh-toc .toc-link:hover {
+    background: linear-gradient(90deg, var(--ghost-accent-color), pink);
+    color: white;
+    box-shadow: 0 0 8px var(--ghost-accent-color);
+    transform: translateX(4px);
+}
+
+/* Active Link 標示 */
+.gh-toc .is-active-link::before {
+    content: "❥";
+    margin-right: 0.5rem;
+    color: var(--ghost-accent-color);
+    animation: glowPulse 1.5s infinite ease-in-out;
+}
+
+.toc-list,
+.toc-list li {
+    list-style: none !important;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.toc-list li::marker {
+    display: none !important;
+}
+
+@keyframes glowPulse {
+    0% { text-shadow: 0 0 5px var(--ghost-accent-color); }
+    50% { text-shadow: 0 0 15px var(--ghost-accent-color); }
+    100% { text-shadow: 0 0 5px var(--ghost-accent-color); }
+}
+
+/* 層級區分 */
+.gh-toc .toc-link.node-name--H1 { font-weight: bold; font-size: 100%; }
+.gh-toc .toc-link.node-name--H2 { padding-left: 1.5rem; font-size: 95%; }
+.gh-toc .toc-link.node-name--H3 { padding-left: 2.5rem; font-size: 90%; color: color-mix(in srgb, var(--ghost-accent-color) 70%, black); }
+.gh-toc .toc-link.node-name--H4 {
+    padding-left: 3rem;
+    font-size: 85%;
+    color: var(--ghost-accent-color);
+    font-style: italic;
+}
+
+/* 滾動補償 */
+html { scroll-behavior: smooth; }
+.gh-content [id] { scroll-margin-top: 100px; }
+.gh-content h1[id], .gh-content h2[id], .gh-content h3[id], .gh-content h4[id] {
+    scroll-margin-top: 120px;
+}
+
+/* 📱 行動裝置版本 */
+@media (max-width: 767px) {
+    .gh-sidebar {
+        position: relative;
+        top: unset;
+        left: unset;
+        width: 100%;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+        background: color-mix(in srgb, var(--ghost-accent-color) 5%, white);
+        box-shadow: none;
+        margin-bottom: 2rem;
+        animation: none;
+    }
+
+    .gh-toc .toc-link {
+        padding: 0.6rem 1rem;
+        margin: 2px 0;
+    }
+}
+
 
 /*
 

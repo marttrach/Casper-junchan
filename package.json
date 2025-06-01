@@ -22,9 +22,9 @@
         "postship": "git fetch && gulp release"
     },
     "author": {
-        "name": "Ghost Foundation",
-        "email": "hello@ghost.org",
-        "url": "https://ghost.org/"
+        "name": "junchan",
+        "email": "junchan@mail.junchan.blog",
+        "url": "https://www.junchan.blog/"
     },
     "gpm": {
         "type": "theme",

@@ -16,7 +16,7 @@
     {{!-- Theme assets - use the {asset} helper to reference styles & scripts,
     this will take care of caching and cache-busting automatically --}}
     <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.9.1/tocbot.css">
     {{!-- This tag outputs all your advanced SEO meta, structured data, and other important settings,
     it should always be the last tag before the closing head tag --}}
     {{ghost_head}}
@@ -116,5 +116,68 @@ $(document).ready(function () {
 {{!-- Ghost outputs required functional scripts with this tag - it should always be the last thing before the closing body tag --}}
 {{ghost_foot}}
 <script src="{{asset "js/nav-dropdown.js"}}"></script>
+
+{{!-- This script is for the tocbot--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.9.1/tocbot.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const headings = document.querySelectorAll('.gh-content h1, .gh-content h2, .gh-content h3, .gh-content h4');
+
+    headings.forEach(function (heading) {
+        const originalId = heading.getAttribute('id') || '';
+        const isURLEncoded = decodeURIComponent(originalId) !== originalId;
+        const shouldReplace =
+            !originalId ||
+            originalId.trim() === '' ||
+            originalId.trim() === '-' ||
+            originalId.trim().startsWith('-') ||
+            isURLEncoded;
+
+        if (shouldReplace) {
+            let baseId = heading.textContent.trim()
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9\u3040-\u30ff\uac00-\ud7af\u4e00-\u9fa5\s-]/g, '') // 保留中日韓
+                .replace(/\s+/g, '-')
+                .replace(/^-+|-+$/g, '');
+
+            if (!baseId || baseId.startsWith('-')) {
+                baseId = 'h-' + (baseId || 'section');
+            }
+
+            let uniqueId = baseId;
+            let counter = 1;
+            while (document.getElementById(uniqueId)) {
+                uniqueId = `${baseId}-${counter++}`;
+            }
+
+            heading.id = uniqueId;
+        }
+    });
+
+    const tocEl = document.querySelector('.gh-toc');
+    if (tocEl && headings.length > 0) {
+        tocbot.init({
+            tocSelector: '.gh-toc',
+            contentSelector: '.gh-content',
+            headingSelector: 'h1, h2, h3, h4',
+            hasInnerContainers: true,
+            collapseDepth: 6
+        });
+    }
+
+    document.querySelectorAll('.gh-toc a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = decodeURIComponent(this.getAttribute('href').slice(1));
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState(null, null, `#${targetId}`);
+            }
+        });
+    });
+});
+</script>
+
 </body>
 </html>
