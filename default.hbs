@@ -163,6 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
             hasInnerContainers: true,
             collapseDepth: 6
         });
+    } else {
+        const sidebarEl = document.querySelector('.gh-sidebar');
+        if (sidebarEl) {
+            sidebarEl.style.display = 'none';
+        }
     }
 
     document.querySelectorAll('.gh-toc a[href^="#"]').forEach(function (anchor) {
